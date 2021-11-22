@@ -4,8 +4,8 @@ import java.awt.Color;
 import javax.swing.JFrame;
 
 public class Walls {
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 650;
+	public static final int WIDTH = 1200;
+	public static final int HEIGHT = 700;
 	JFrame f;
 	GamePanel gp;
 	public static void main(String[] args) {

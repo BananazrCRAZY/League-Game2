@@ -25,6 +25,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	int currentState = MENU;
 	Font titleF;
 	Font subTextF;
+	Font smallTextF;
 	Timer frameDraw;
 	Timer wallSpawn;
 	WObjectManager wom;
@@ -34,8 +35,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public static boolean needImage = true;
 	public static boolean gotImage = false;
 	GamePanel() {
-		titleF = new Font("Arial", Font.PLAIN, 50);
-		 subTextF = new Font("Arial", Font.PLAIN, 21);
+		titleF = new Font("Arial", Font.PLAIN, 130);
+		 subTextF = new Font("Arial", Font.PLAIN, 50);
+		 smallTextF = new Font("Arial", Font.PLAIN, 25);
 		 p = new Player(350, 590, 50, 50);
 		 wom = new WObjectManager(p);
 		 
@@ -82,19 +84,47 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(titleF);
 		g.setColor(Color.WHITE);
-		g.drawString("WALLS", 380, 250);
+		g.drawString("WALLS", 385, 250);
+		
+		g.setFont(subTextF);
+		g.drawString("Press ENTER to PLAY", 355, 500);
+		
+		g.setFont(smallTextF);
+		g.drawString("Press SPACE for INSTRUCTIONS", 420, 600);
 	}
 	void drawGameState(Graphics g) {
-		g.setColor(Color.RED);
+		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
 	}
 	void drawGameoverState(Graphics g) {
-		g.setColor(Color.GRAY);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		
+		g.setFont(titleF);
+		g.setColor(Color.RED);
+		g.drawString("GAMEOVER", 220, 250);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("SCORE: ", 440, 400);
+		
+		g.setFont(smallTextF);
+		g.drawString("Press ENTER for MENU", 250, 600);
+		
+		g.setFont(smallTextF);
+		g.drawString("Press 'Q' to QUIT", 800, 600);
 	}
 	void drawIntructionsState(Graphics g) {
-		g.setColor(Color.MAGENTA);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		
+		g.setFont(titleF);
+		g.setColor(Color.BLUE);
+		g.drawString("INSTUCTIONS", 160, 200);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("SCORE: ", 440, 400);
 	}
 	
 	@Override
@@ -172,6 +202,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			if (currentState == MENU) {
 				currentState = INSTRUCTIONS;
 			}
+		}
+		
+		if (currentState == GAMEOVER && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
+			System.exit(0);
 		}
 	}
 
