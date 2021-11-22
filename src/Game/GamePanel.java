@@ -9,7 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -91,6 +92,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(smallTextF);
 		g.drawString("Press SPACE for INSTRUCTIONS", 420, 600);
+		
+		g.drawString("'Q' Quit", 20, 40);
 	}
 	void drawGameState(Graphics g) {
 		g.setColor(Color.BLUE);
@@ -110,8 +113,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(smallTextF);
 		g.drawString("Press ENTER for MENU", 250, 600);
-		
-		g.setFont(smallTextF);
 		g.drawString("Press 'Q' to QUIT", 800, 600);
 	}
 	void drawIntructionsState(Graphics g) {
@@ -120,11 +121,20 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
-		g.drawString("INSTUCTIONS", 160, 200);
+		g.drawString("INSTUCTIONS", 160, 150);
 		
 		g.setFont(subTextF);
 		g.setColor(Color.WHITE);
-		g.drawString("SCORE: ", 440, 400);
+		g.drawString("GOAL: To SURVIVE for as long as possible", 130, 270);
+		
+		g.drawString("PLAY: As walls start coming towards you", 130, 340);
+		g.drawString("MOVE using WASD to the hole in the", 290, 400);
+		g.drawString("wall inorder to not get hit", 290, 460);
+		
+		g.drawString("LOSE: If you get hit by a wall GAMEOVER", 130, 540);
+		
+		g.setFont(smallTextF);
+		g.drawString("Press ENTER to RETURN", 450, 610);
 	}
 	
 	@Override
@@ -204,8 +214,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		
-		if (currentState == GAMEOVER && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
+		if ((currentState == GAMEOVER || currentState == MENU || currentState == INSTRUCTIONS) && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
 			System.exit(0);
+		}
+		if (currentState==GAME && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
+			int quit = JOptionPane.showOptionDialog(null, "Are you sure you would like to QUIT?", "Pop-up Title", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Back to GAME", "QUIT"}, null);
+			if (quit == 1) {
+				System.exit(0);
+			}
 		}
 	}
 
