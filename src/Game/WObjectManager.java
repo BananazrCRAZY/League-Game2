@@ -6,11 +6,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Invaders.Alien;
+import Invaders.LeagueInvaders;
+
 public class WObjectManager implements ActionListener{
 	Player play;
 	ArrayList<WallObject> walls = new ArrayList<WallObject>();
+	ArrayList<Pass> passes = new ArrayList<Pass>();
 	Random ran = new Random();
 	int score = 0;
+	
 
 	WObjectManager(Player play) {
 		this.play = play;
@@ -21,7 +26,8 @@ public class WObjectManager implements ActionListener{
 //	}
 
 	void addWall() {
-		walls.add(new WallObject(ran.nextInt(Walls.WIDTH),0,50,50));
+		walls.add(new WallObject(0,0,1200,50));
+		passes.add(new Pass(ran.nextInt(Walls.WIDTH-1),0,70,55));
 	}
 
 	void update() {
@@ -30,11 +36,21 @@ public class WObjectManager implements ActionListener{
 		}
 		for (int i = 0; i < walls.size(); i++) {
 			WallObject a = walls.get(i);
-			if (a.x >= 690 || a.x <= -10 || a.y >= 820) {
+			if (a.x >= Walls.WIDTH || a.y >= Walls.HEIGHT) {
 				a.isActive = false;
 			}
 			a.update();
 			if (PurgeObjects(walls, a)) {
+				i--;
+			}
+		}
+		for (int i = 0; i < passes.size(); i++) {
+			Pass ps = passes.get(i);
+			if (ps.x >= Walls.WIDTH || ps.y >= Walls.HEIGHT) {
+				ps.isActive = false;
+			}
+			ps.update();
+			if (PurgeObjects(passes, ps)) {
 				i--;
 			}
 		}
@@ -56,6 +72,10 @@ public class WObjectManager implements ActionListener{
 		for (WallObject a: walls) {
 			a.draw(g);
 		}
+		for (Pass p: passes) {
+			p.draw(g);
+		}
+
 
 //		for (Projectile p: projectiles) {
 //			p.draw(g);
@@ -67,6 +87,7 @@ public class WObjectManager implements ActionListener{
 	boolean PurgeObjects(ArrayList list, WGameObject go) {
 		if (!go.isActive) {
 			list.remove(go);
+			score++;
 			return true;
 		}
 		return false;
@@ -79,13 +100,27 @@ public class WObjectManager implements ActionListener{
 	}
 
 	public void checkCollision() {
-		for(int i = 0; i < walls.size(); i++){
-			WallObject a = walls.get(i);
-			if (play.collisionBox.intersects(a.collisionBox)) {
-				play.isActive = false;
-				a.isActive = false;
-				break;
+		boolean noskip = true;
+		
+		for(int k = 0; k < walls.size(); k++){
+			Pass p = passes.get(k);
+			if (play.collisionBox.intersects(p.collisionBox)) {
+				play.isActive = true;
+				noskip = false;
 			}
+		}
+		
+		if (noskip) {
+			for(int i = 0; i < walls.size(); i++){
+				WallObject a = walls.get(i);
+				if (play.collisionBox.intersects(a.collisionBox)) {
+					play.isActive = false;
+					a.isActive = false;
+					break;
+				}
+			}
+		}
+			
 //			for(int j = 0; j < projectiles.size(); j++){
 //				Projectile p = projectiles.get(j);
 //				if (p.collisionBox.intersects(a.collisionBox)) {
@@ -94,7 +129,6 @@ public class WObjectManager implements ActionListener{
 //					score++;
 //				}
 //			}
-		}
 	}
 	
 	public int getScore() {

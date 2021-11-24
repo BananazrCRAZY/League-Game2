@@ -14,9 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Invaders.ObjectManager;
-import Invaders.Rocketship;
-
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int MENU = 0;
 	final int GAME = 1;
@@ -31,6 +28,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer wallSpawn;
 	WObjectManager wom;
 	Player p;
+	boolean paused = false;
 	
 	public static BufferedImage image;
 	public static boolean needImage = true;
@@ -39,11 +37,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		titleF = new Font("Arial", Font.PLAIN, 130);
 		 subTextF = new Font("Arial", Font.PLAIN, 50);
 		 smallTextF = new Font("Arial", Font.PLAIN, 25);
-		 p = new Player(350, 590, 50, 50);
+		 p = new Player(550, 600, 50, 50);
 		 wom = new WObjectManager(p);
+		 wallSpawn = new Timer(1000, wom);
 		 
 		 if (needImage) {
-			    loadImage ("");
+			    loadImage ("wallsfillerbackground.jpg");
 			}
 		 
 		 frameDraw = new Timer(1000/60,this);
@@ -55,7 +54,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if(currentState == MENU){
 		    drawMenuState(g);
 		}else if(currentState == GAME){
-		    drawGameState(g);
+			if (!paused) {
+				drawGameState(g);
+			}
 		}else if(currentState == GAMEOVER){
 		    drawGameoverState(g);
 		} else if (currentState == INSTRUCTIONS) {
@@ -67,9 +68,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 	}
 	void updateGameState() {
-		wom.update();
-		if (!p.isActive) {
-			currentState = GAMEOVER;
+		if (!paused) {
+			wom.update();
+			if (!p.isActive) {
+				currentState = GAMEOVER;
+			}
 		}
 	}
 	void updateGameoverState() {
@@ -96,8 +99,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("'Q' Quit", 20, 40);
 	}
 	void drawGameState(Graphics g) {
-		g.setColor(Color.BLUE);
-		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		if (gotImage) {
+			g.drawImage(image, 0, 0, Walls.WIDTH, Walls.HEIGHT, null);
+		} else {
+			g.setColor(Color.BLUE);
+			g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		}
+		
+		wom.draw(g);
 	}
 	void drawGameoverState(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -109,7 +118,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(subTextF);
 		g.setColor(Color.WHITE);
-		g.drawString("SCORE: ", 440, 400);
+		g.drawString("SCORE: " + wom.getScore(), 440, 400);
 		
 		g.setFont(smallTextF);
 		g.drawString("Press ENTER for MENU", 250, 600);
@@ -127,9 +136,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.WHITE);
 		g.drawString("GOAL: To SURVIVE for as long as possible", 130, 270);
 		
-		g.drawString("PLAY: As walls start coming towards you", 130, 340);
-		g.drawString("MOVE using WASD to the hole in the", 290, 400);
-		g.drawString("wall inorder to not get hit", 290, 460);
+		g.drawString("PLAY: MOVE using the ARROW KEYS", 130, 340);
+		g.drawString("don't get hit by the walls by", 290, 400);
+		g.drawString("moving to the holes in the walls", 290, 460);
 		
 		g.drawString("LOSE: If you get hit by a wall GAMEOVER", 130, 540);
 		
@@ -143,7 +152,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if(currentState == MENU){
 		    updateMenuState();
 		}else if(currentState == GAME){
-		    updateGameState();
+			if (!paused) {
+				updateGameState();
+			}
 		}else if(currentState == GAMEOVER){
 		    updateGameoverState();
 		} else if (currentState == INSTRUCTIONS) {
@@ -151,17 +162,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		repaint();
 		
-		if (p.y <= 5) {
-			p.y = 6;
+		if (p.y <= 0) {
+			p.y = 1;
 		}
-		if (p.y >= 554) {
-			p.y = 553;
+		if (p.y >= Walls.HEIGHT-50) {
+			p.y = Walls.HEIGHT-51;
 		}
-		if (p.x <= 5) {
-			p.x = 6;
+		if (p.x <= 0) {
+			p.x = 1;
 		}
-		if (p.x >= 731) {
-			p.x = 730;
+		if (p.x >= Walls.WIDTH-50) {
+			p.x = Walls.WIDTH-51;
 		}
 	}
 	
@@ -177,6 +188,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == GAMEOVER) {
 		        currentState = MENU;
+		        p = new Player(550, 600, 50, 50);
+				wom = new WObjectManager(p);
 		    } else if (currentState == INSTRUCTIONS) {
 		    	currentState = MENU;
 		    } else {
@@ -184,29 +197,25 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		        if (currentState == GAME) {
 		        	startGame();
 		        }else if (currentState == GAMEOVER) {
-		        	wallSpawn.stop();
+		        	stopGame();
 		        }
 		    }
 		}
 		if (e.getKeyCode()==KeyEvent.VK_UP) {
-		    if (p.y > 5) {
+		    if (p.y > 0) {
 		    	p.up();
 		    }
 		}
 		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
-			if (p.x > 5) {
+			if (p.x > 0) {
 		    	p.left();
 		    }
 		}
 		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-		    if (p.x < 731) {
 		    	p.right();
-		    }
 		}
 		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-			if (p.y < 554) {
 		    	p.down();
-		    }
 		}
 		if (e.getKeyCode()==KeyEvent.VK_SPACE) {
 			if (currentState == MENU) {
@@ -218,9 +227,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			System.exit(0);
 		}
 		if (currentState==GAME && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
+			stopGame();
+			paused = true;
 			int quit = JOptionPane.showOptionDialog(null, "Are you sure you would like to QUIT?", "Pop-up Title", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Back to GAME", "QUIT"}, null);
 			if (quit == 1) {
 				System.exit(0);
+			} else {
+				paused = false;
+				wallSpawn.start();
 			}
 		}
 	}
@@ -246,5 +260,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void startGame() {
 		wallSpawn = new Timer(1000, wom);
 		wallSpawn.start();
+	}
+	void stopGame() {
+		wallSpawn.stop();
 	}
 }
