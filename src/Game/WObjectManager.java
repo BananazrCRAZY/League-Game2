@@ -6,19 +6,20 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-import Invaders.Alien;
-import Invaders.LeagueInvaders;
+import javax.swing.Timer;
 
 public class WObjectManager implements ActionListener{
 	Player play;
 	ArrayList<WallObject> walls = new ArrayList<WallObject>();
 	ArrayList<Pass> passes = new ArrayList<Pass>();
-	Random ran = new Random();
+	Random ran;
 	int score = 0;
-	
+	double numwall = -1;
+	Timer playtime = new Timer(2147483647, this);
 
 	WObjectManager(Player play) {
 		this.play = play;
+		playtime.start();
 	}
 
 //	void addProjectile(Projectile pro) {
@@ -26,8 +27,15 @@ public class WObjectManager implements ActionListener{
 //	}
 
 	void addWall() {
-		walls.add(new WallObject(0,0,1200,50));
-		passes.add(new Pass(ran.nextInt(Walls.WIDTH-1),0,70,55));
+		numwall++;
+		if (numwall%7==0 || numwall==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 100;
+			walls.add(new WallObject(0,0, dis,50));
+			walls.add(new WallObject(start,0, 1100,50));
+			//passes.add(new Pass(ran.nextInt(Walls.WIDTH-1),0,70,55));
+		}
 	}
 
 	void update() {
@@ -102,13 +110,13 @@ public class WObjectManager implements ActionListener{
 	public void checkCollision() {
 		boolean noskip = true;
 		
-		for(int k = 0; k < walls.size(); k++){
-			Pass p = passes.get(k);
-			if (play.collisionBox.intersects(p.collisionBox)) {
-				play.isActive = true;
-				noskip = false;
-			}
-		}
+//		for(int k = 0; k < walls.size(); k++){
+//			Pass p = passes.get(k);
+//			if (play.collisionBox.intersects(p.collisionBox)) {
+//				play.isActive = true;
+//				noskip = false;
+//			}
+//		}
 		
 		if (noskip) {
 			for(int i = 0; i < walls.size(); i++){

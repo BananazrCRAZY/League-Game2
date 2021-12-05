@@ -19,6 +19,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int GAME = 1;
 	final int GAMEOVER = 2;
 	final int INSTRUCTIONS = 3;
+	final int CHOOSE = 4;
 	
 	int currentState = MENU;
 	Font titleF;
@@ -79,6 +80,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	}
 	void updateInstruState() {
+		
+	}
+	void updateChooseState() {
 		
 	}
 	
@@ -145,6 +149,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setFont(smallTextF);
 		g.drawString("Press ENTER to RETURN", 450, 610);
 	}
+	void drawChooseState(Graphics g) {
+		
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -159,6 +166,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		    updateGameoverState();
 		} else if (currentState == INSTRUCTIONS) {
 			updateInstruState();
+		} else if (currentState == CHOOSE) {
+			updateChooseState();
 		}
 		repaint();
 		
@@ -236,6 +245,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				paused = false;
 				wallSpawn.start();
 			}
+		}
+		if (currentState==MENU && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
+			System.out.println("CHOOSE A CHARACTER");
 		}
 	}
 
