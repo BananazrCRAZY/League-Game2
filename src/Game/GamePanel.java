@@ -43,8 +43,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 wallSpawn = new Timer(1000, wom);
 		 
 		 if (needImage) {
-			    loadImage ("wallsfillerbackground.jpg");
-			}
+			 loadImage ("wallsfillerbackground.jpg");
+		}
 		 
 		 frameDraw = new Timer(1000/60,this);
 		 frameDraw.start();
@@ -62,6 +62,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		    drawGameoverState(g);
 		} else if (currentState == INSTRUCTIONS) {
 			drawIntructionsState(g);
+		} else if (currentState == CHOOSE) {
+			drawChooseState(g);
 		}
 	}
 	
@@ -103,14 +105,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("'Q' Quit", 20, 40);
 	}
 	void drawGameState(Graphics g) {
-		if (gotImage) {
-			g.drawImage(image, 0, 0, Walls.WIDTH, Walls.HEIGHT, null);
-		} else {
-			g.setColor(Color.BLUE);
-			g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
-		}
-		
+		drawImage("wallsfillerbackground.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
 		wom.draw(g);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.BLACK);
+		g.drawString(wom.score+"", 1100, 50);
 	}
 	void drawGameoverState(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -150,7 +150,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("Press ENTER to RETURN", 450, 610);
 	}
 	void drawChooseState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
 		
+		g.setFont(subTextF);
+		g.setColor(Color.RED);
+		g.drawString("Power Selection", 435, 100);
+		
+		g.setFont(smallTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("No Power 'F'", 1000, 660);
 	}
 	
 	@Override
@@ -201,7 +210,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				wom = new WObjectManager(p);
 		    } else if (currentState == INSTRUCTIONS) {
 		    	currentState = MENU;
-		    } else {
+		    } else if (currentState == CHOOSE) {
+		    	//same as f
+		    	currentState=MENU;
+		    }else {
 		        currentState++;
 		        if (currentState == GAME) {
 		        	startGame();
@@ -232,7 +244,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		
-		if ((currentState == GAMEOVER || currentState == MENU || currentState == INSTRUCTIONS) && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
+		if ((currentState == GAMEOVER || currentState == MENU || currentState == INSTRUCTIONS || currentState == CHOOSE) && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
 			System.exit(0);
 		}
 		if (currentState==GAME && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
@@ -247,7 +259,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		if (currentState==MENU && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
+			currentState=CHOOSE;
 			System.out.println("CHOOSE A CHARACTER");
+		}
+		if (currentState==CHOOSE && (e.getKeyCode()==70 || e.getKeyCode()==102)) {
+			currentState=MENU;
 		}
 	}
 
@@ -255,6 +271,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	void drawImage(String file, Graphics g, int x, int y, int w, int h) {
+		loadImage(file);
+		if (gotImage) {
+			g.drawImage(image, x, y, w, h, null);
+		} else {
+			g.setColor(Color.BLUE);
+			g.fillRect(x, y, w, h);
+		}
 	}
 	
 	void loadImage(String imageFile) {

@@ -13,7 +13,8 @@ public class WObjectManager implements ActionListener{
 	ArrayList<WallObject> walls = new ArrayList<WallObject>();
 	ArrayList<Pass> passes = new ArrayList<Pass>();
 	Random ran;
-	int score = 0;
+	//changed for testing
+	int score = 180;
 	double numwall = -1;
 	Timer playtime = new Timer(2147483647, this);
 
@@ -28,7 +29,15 @@ public class WObjectManager implements ActionListener{
 
 	void addWall() {
 		numwall++;
-		if (numwall%7==0 || numwall==0) {
+		if (score>=210 && numwall%5==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 100;
+			walls.add(new WallObject(0,0, dis,50));
+			walls.add(new WallObject(start,0, 1100,50));
+		} 
+		//error with the next one not skipping
+		if (score < 200 && numwall%6==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
@@ -95,7 +104,7 @@ public class WObjectManager implements ActionListener{
 	boolean PurgeObjects(ArrayList list, WGameObject go) {
 		if (!go.isActive) {
 			list.remove(go);
-			score++;
+			score+=5;
 			return true;
 		}
 		return false;
