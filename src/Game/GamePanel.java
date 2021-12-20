@@ -159,7 +159,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
-		g.drawString("No Power 'F'", 1000, 660);
+		g.drawString("No Power 'F'", 1000, 50);
+		
+		drawImage("wallsfillerbackground.jpg", g, 150, 200, 274, 400);
+		g.drawString("SPEEDSTER 'A'", 187, 650);
+		drawImage("wallsfillerbackground.jpg", g, 463, 200, 274, 400);
+		g.drawString("WALL BREAKER 'S'", 483, 650);
+		drawImage("wallsfillerbackground.jpg", g, 776, 200, 274, 400);
+		g.drawString(" 'D'", 900, 650);
 	}
 	
 	@Override
@@ -262,8 +269,27 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			currentState=CHOOSE;
 			System.out.println("CHOOSE A CHARACTER");
 		}
-		if (currentState==CHOOSE && (e.getKeyCode()==70 || e.getKeyCode()==102)) {
-			currentState=MENU;
+		if (currentState==CHOOSE) {
+			// F no power
+			if (e.getKeyCode()==70 || e.getKeyCode()==102) {
+				System.out.println("Chosen Default");
+				currentState=MENU;
+			}
+			// A speedster
+			if (e.getKeyCode()==65 || e.getKeyCode()==97) {
+				System.out.println("Chosen Speedster");
+				currentState=MENU;
+			}
+			// S breaker
+			if (e.getKeyCode()==83 || e.getKeyCode()==115) {
+				System.out.println("Chosen Wall Breaker");
+				currentState=MENU;
+			}
+			// D 
+			if (e.getKeyCode()==68 || e.getKeyCode()==100) {
+				System.out.println("Chosen ");
+				currentState=MENU;
+			}
 		}
 	}
 
