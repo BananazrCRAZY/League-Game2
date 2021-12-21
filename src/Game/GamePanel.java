@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 wallSpawn = new Timer(1000, wom);
 		 
 		 if (needImage) {
-			 loadImage ("wallsfillerbackground.jpg");
+			 loadImage ("wallsback.jpg");
 		}
 		 
 		 frameDraw = new Timer(1000/60,this);
@@ -105,7 +105,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("'Q' Quit", 20, 40);
 	}
 	void drawGameState(Graphics g) {
-		drawImage("wallsfillerbackground.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
+		drawImage("wallsback.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
 		wom.draw(g);
 		
 		g.setFont(subTextF);
