@@ -7,15 +7,16 @@ public class WGameObject {
 	 int y;
 	 int width;
 	 int height;
-	 int speed = 0;
+	 double speed;
 	 boolean isActive = true;
 	 Rectangle collisionBox;
 	 
-	 public WGameObject(int x, int y, int width, int height) {
+	 public WGameObject(int x, int y, int width, int height, double speed) {
 		 this.x = x;
 		 this.y = y;
 		 this.width = width;
 		 this.height = height;
+		 this.speed = speed;
 		 collisionBox = new Rectangle(x, y, width, height);
 	 }
 	 

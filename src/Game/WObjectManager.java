@@ -14,13 +14,11 @@ public class WObjectManager implements ActionListener{
 	ArrayList<Pass> passes = new ArrayList<Pass>();
 	Random ran;
 	//changed for testing
-	int score = 180;
+	int score = 280;
 	double numwall = -1;
-	Timer playtime = new Timer(2147483647, this);
 
 	WObjectManager(Player play) {
 		this.play = play;
-		playtime.start();
 	}
 
 //	void addProjectile(Projectile pro) {
@@ -29,20 +27,54 @@ public class WObjectManager implements ActionListener{
 
 	void addWall() {
 		numwall++;
-		if (score>=210 && numwall%5==0) {
+		if (score > 550 && score < 650 && numwall%5==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 70;
+			walls.add(new WallObject(0,0, dis,50, 3));
+			walls.add(new WallObject(start,0, 1100,50, 3));
+		} else if (score > 450 && score < 550 && numwall%6==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 75;
+			walls.add(new WallObject(0,0, dis,50, 2));
+			walls.add(new WallObject(start,0, 1100,50, 2));
+		} else if (score > 350 && score < 450 && numwall%7==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 75;
+			walls.add(new WallObject(0,0, dis,50, 2));
+			walls.add(new WallObject(start,0, 1100,50, 2));
+		} else if (score > 300 && score < 350 && numwall%7==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50));
-			walls.add(new WallObject(start,0, 1100,50));
-		} 
-		//error with the next one not skipping
-		if (score < 200 && numwall%6==0) {
+			walls.add(new WallObject(0,0, dis,50, 2));
+			walls.add(new WallObject(start,0, 1100,50, 2));
+		} else if (score > 250 && score < 300 && numwall%8==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50));
-			walls.add(new WallObject(start,0, 1100,50));
+			walls.add(new WallObject(0,0, dis,50, 2));
+			walls.add(new WallObject(start,0, 1100,50, 2));
+		} else if (score > 210 && score < 250 && numwall%9==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 100;
+			walls.add(new WallObject(0,0, dis,50, 2));
+			walls.add(new WallObject(start,0, 1100,50, 2));
+		} else if (score > 100 && score < 210 && numwall%9==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 100;
+			walls.add(new WallObject(0,0, dis,50, 1));
+			walls.add(new WallObject(start,0, 1100,50, 1));
+		} else if (score >= 0 && score < 100 && numwall%10==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 100;
+			walls.add(new WallObject(0,0, dis,50, 1));
+			walls.add(new WallObject(start,0, 1100,50, 1));
 			//passes.add(new Pass(ran.nextInt(Walls.WIDTH-1),0,70,55));
 		}
 	}

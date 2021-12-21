@@ -9,10 +9,8 @@ public class WallObject extends WGameObject{
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;
-	
-	public WallObject(int x, int y, int width, int height) {
-		super(x, y, width, height);
-		speed = 1;
+	public WallObject(int x, int y, int width, int height, double speed) {
+		super(x, y, width, height, speed);
 		
 		if (needImage) {
 		    loadImage ("wall.png");

@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		titleF = new Font("Arial", Font.PLAIN, 130);
 		 subTextF = new Font("Arial", Font.PLAIN, 50);
 		 smallTextF = new Font("Arial", Font.PLAIN, 25);
-		 p = new Player(550, 600, 50, 50);
+		 p = new Player(550, 600, 50, 50, 9);
 		 wom = new WObjectManager(p);
 		 wallSpawn = new Timer(1000, wom);
 		 
@@ -109,7 +109,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		wom.draw(g);
 		
 		g.setFont(subTextF);
-		g.setColor(Color.BLACK);
+		g.setColor(Color.WHITE);
 		g.drawString(wom.score+"", 1100, 50);
 	}
 	void drawGameoverState(Graphics g) {
@@ -213,7 +213,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == GAMEOVER) {
 		        currentState = MENU;
-		        p = new Player(550, 600, 50, 50);
+		        p = new Player(550, 600, 50, 50, 9);
 				wom = new WObjectManager(p);
 		    } else if (currentState == INSTRUCTIONS) {
 		    	currentState = MENU;
