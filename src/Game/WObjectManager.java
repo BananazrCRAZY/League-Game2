@@ -27,48 +27,56 @@ public class WObjectManager implements ActionListener{
 
 	void addWall() {
 		numwall++;
+		
 		if (score > 550 && score < 650 && numwall%5==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 70;
 			walls.add(new WallObject(0,0, dis,50, 3));
 			walls.add(new WallObject(start,0, 1100,50, 3));
+// Stage 7 460-540
 		} else if (score > 450 && score < 550 && numwall%6==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 75;
 			walls.add(new WallObject(0,0, dis,50, 2));
 			walls.add(new WallObject(start,0, 1100,50, 2));
+// Stage 6 360-440
 		} else if (score > 350 && score < 450 && numwall%7==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 75;
 			walls.add(new WallObject(0,0, dis,50, 2));
 			walls.add(new WallObject(start,0, 1100,50, 2));
+// Stage 5 310-340
 		} else if (score > 300 && score < 350 && numwall%7==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
 			walls.add(new WallObject(0,0, dis,50, 2));
 			walls.add(new WallObject(start,0, 1100,50, 2));
+// Stage 4 260-290
 		} else if (score > 250 && score < 300 && numwall%8==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
 			walls.add(new WallObject(0,0, dis,50, 2));
 			walls.add(new WallObject(start,0, 1100,50, 2));
+// Stage 3 220-240
 		} else if (score > 210 && score < 250 && numwall%9==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
 			walls.add(new WallObject(0,0, dis,50, 2));
 			walls.add(new WallObject(start,0, 1100,50, 2));
+// Stage 2 110-200
 		} else if (score > 100 && score < 210 && numwall%9==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
 			walls.add(new WallObject(0,0, dis,50, 1));
 			walls.add(new WallObject(start,0, 1100,50, 1));
+// Stage 1 0-90
 		} else if (score >= 0 && score < 100 && numwall%10==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
