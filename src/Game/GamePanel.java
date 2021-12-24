@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	Font smallTextF;
 	Timer frameDraw;
 	Timer wallSpawn;
+	int timeint = -1;
 	WObjectManager wom;
 	
 	Player p;
@@ -72,6 +73,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	@Override
 	public void paintComponent(Graphics g) {
 		if(currentState == MENU){
+			timeint++;
 		    drawMenuState(g);
 		}else if(currentState == GAME){
 			if (!paused) {
@@ -134,14 +136,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.WHITE);
 		g.drawString("WALLS", 385, 250);
-		
+
 		g.setFont(subTextF);
-		g.drawString("Press ENTER to PLAY", 355, 500);
+		if (!(timeint % 20 == 0) && timeint > 0) {
+			g.drawString("Press ENTER to PLAY", 355, 500);
+		} else if (timeint > 0) timeint = -10;
 		
 		g.setFont(smallTextF);
 		g.drawString("Press SPACE for INSTRUCTIONS", 420, 600);
-		
-		g.drawString("'Q' PAUSE/QUIT", 20, 40);
 	}
 	void drawGameState(Graphics g) {
 		drawImage("wallsback.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
@@ -165,7 +167,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		
 		g.setFont(smallTextF);
 		g.drawString("Press ENTER for MENU", 250, 600);
-		g.drawString("Press 'Q' to PAUSE/QUIT", 800, 600);
+		g.drawString("Press 'Q' to QUIT", 800, 600);
 	}
 	void drawIntructionAState(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -215,6 +217,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.drawString("CONTROLS", 450, 240);
 		
 		g.setFont(smallTextF);
+		g.drawString("Move", 350, 325);
+		g.drawString("Arrow Keys", 750, 325);
+		g.drawString("Close Game/Pause", 350, 375);
+		g.drawString("Q", 750, 375);
+		g.drawString("Continue/Leave Game", 350, 425);
+		g.drawString("ENTER", 750, 425);
+		g.drawString("Shoot (Breaker Power)", 350, 475);
+		g.drawString("SPACE", 750, 475);
 		g.drawString("Press ENTER for MENU", 10, 25);
 		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
@@ -225,6 +235,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
+		drawImage("wallsfillerbackground.jpg", g, 150, 200, 274, 400);
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
@@ -409,8 +420,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				System.out.println("Chosen Wall Breaker");
 				name = "breakerblueplayer.png";
 				size = 55;
-				speed = 7.3;
-				p = new Player(550, 600, 55, 55, 7.3, name);
+				speed = 6.9;
+				p = new Player(550, 600, 55, 55, 6.9, name);
 				wom = new WObjectManager(p);
 				wom.points = 5;
 				powersFalse();

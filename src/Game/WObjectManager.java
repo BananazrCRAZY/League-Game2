@@ -130,7 +130,9 @@ public class WObjectManager implements ActionListener{
 	boolean PurgeObjects(ArrayList list, WGameObject go) {
 		if (!go.isActive) {
 			list.remove(go);
-			score+=points;
+			if (list == walls) {
+				score+=points;
+			}
 			return true;
 		}
 		return false;
