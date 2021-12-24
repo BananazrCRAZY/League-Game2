@@ -9,8 +9,8 @@ public class WallObject extends WGameObject{
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;
-	public WallObject(int x, int y, int width, int height, double speed) {
-		super(x, y, width, height, speed);
+	public WallObject(int x, int y, int width, int height, double speed, String name) {
+		super(x, y, width, height, speed, name);
 		
 		if (needImage) {
 		    loadImage ("wall.png");
@@ -26,7 +26,7 @@ public class WallObject extends WGameObject{
 		if (gotImage) {
 			g.drawImage(image, x, y, width, height, null);
 		} else {
-			g.setColor(Color.YELLOW);
+			g.setColor(Color.BLUE);
 			g.fillRect(x, y, width, height);
 		}
 	}

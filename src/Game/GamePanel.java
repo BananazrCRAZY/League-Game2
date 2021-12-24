@@ -7,19 +7,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.Random;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class GamePanel extends JPanel implements ActionListener, KeyListener {
+public class GamePanel extends JPanel implements ActionListener, KeyListener, MouseListener {
 	final int MENU = 0;
 	final int GAME = 1;
 	final int GAMEOVER = 2;
-	final int INSTRUCTIONS = 3;
+	final int INSTRUCTIONSA = 3;
 	final int CHOOSE = 4;
+	final int INSTRUCTIONSB = 5;
+	final int INSTRUCTIONSC = 6;
+	final int INSTRUCTIONSD = 7;
+	final int INSTRUCTIONSE = 8;
+	
 	
 	int currentState = MENU;
 	Font titleF;
@@ -28,8 +37,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer frameDraw;
 	Timer wallSpawn;
 	WObjectManager wom;
+	
 	Player p;
+	String name = "blue player.png";
+	int size = 50;
+	double speed = 9;
 	boolean paused = false;
+	
+	public boolean defaultPower = true;
+	public boolean speedPower = false;
+	public boolean breakerPower = false;
+	public boolean fourPower = false;
+	int ammo = 2;
 	
 	public static BufferedImage image;
 	public static boolean needImage = true;
@@ -38,7 +57,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		titleF = new Font("Arial", Font.PLAIN, 130);
 		 subTextF = new Font("Arial", Font.PLAIN, 50);
 		 smallTextF = new Font("Arial", Font.PLAIN, 25);
-		 p = new Player(550, 600, 50, 50, 9);
+		 p = new Player(550, 600, size, size, speed, name);
 		 wom = new WObjectManager(p);
 		 wallSpawn = new Timer(1000, wom);
 		 
@@ -60,10 +79,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}else if(currentState == GAMEOVER){
 		    drawGameoverState(g);
-		} else if (currentState == INSTRUCTIONS) {
-			drawIntructionsState(g);
+		} else if (currentState == INSTRUCTIONSA) {
+			drawIntructionAState(g);
 		} else if (currentState == CHOOSE) {
 			drawChooseState(g);
+		} else if (currentState == INSTRUCTIONSB) {
+			drawInstructionBState(g);
+		} else if (currentState == INSTRUCTIONSC) {
+			drawInstructionCState(g);
+		} else if (currentState == INSTRUCTIONSD) {
+			drawInstructionDState(g);
+		} else if (currentState == INSTRUCTIONSE) {
+			drawInstructionEState(g);
 		}
 	}
 	
@@ -81,13 +108,25 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameoverState() {
 
 	}
-	void updateInstruState() {
-		
+	void updateInstruAState() {
+
 	}
 	void updateChooseState() {
-		
+
 	}
-	
+	void updateInstruBState() {
+
+	}
+	void updateInstruCState() {
+
+	}
+	void updateInstruSDtate() {
+
+	}
+	void updateInstruEState() {
+
+	}
+
 	void drawMenuState(Graphics g) {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
@@ -102,7 +141,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setFont(smallTextF);
 		g.drawString("Press SPACE for INSTRUCTIONS", 420, 600);
 		
-		g.drawString("'Q' Quit", 20, 40);
+		g.drawString("'Q' PAUSE/QUIT", 20, 40);
 	}
 	void drawGameState(Graphics g) {
 		drawImage("wallsback.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
@@ -126,9 +165,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(smallTextF);
 		g.drawString("Press ENTER for MENU", 250, 600);
-		g.drawString("Press 'Q' to QUIT", 800, 600);
+		g.drawString("Press 'Q' to PAUSE/QUIT", 800, 600);
 	}
-	void drawIntructionsState(Graphics g) {
+	void drawIntructionAState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
 		
@@ -136,18 +175,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
 		
-		g.setFont(subTextF);
-		g.setColor(Color.WHITE);
-		g.drawString("GOAL: To SURVIVE for as long as possible", 130, 270);
-		
-		g.drawString("PLAY: MOVE using the ARROW KEYS", 130, 340);
-		g.drawString("don't get hit by the walls by", 290, 400);
-		g.drawString("moving to the holes in the walls", 290, 460);
-		
-		g.drawString("LOSE: If you get hit by a wall GAMEOVER", 130, 540);
-		
 		g.setFont(smallTextF);
-		g.drawString("Press ENTER to RETURN", 450, 610);
+		g.setColor(Color.WHITE);
+		g.drawString("How To Play: Dodge the moving walls and survive as long as possible.", 200, 200);
+		g.drawString("If you get hit by a wall you lose.", 420, 245);
+		g.drawString("Press ENTER for MENU", 10, 25);
+		drawImage("wallsback.jpg", g, 300, 270, 600, 350);
+		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
 	void drawChooseState(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -166,7 +200,62 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		drawImage("wallsfillerbackground.jpg", g, 463, 200, 274, 400);
 		g.drawString("WALL BREAKER 'S'", 483, 650);
 		drawImage("wallsfillerbackground.jpg", g, 776, 200, 274, 400);
-		g.drawString(" 'D'", 900, 650);
+		g.drawString(" 404 ERROR 'D'", 820, 650);
+	}
+	void drawInstructionBState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		
+		g.setFont(titleF);
+		g.setColor(Color.BLUE);
+		g.drawString("INSTUCTIONS", 160, 150);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("CONTROLS", 450, 240);
+		
+		g.setFont(smallTextF);
+		g.drawString("Press ENTER for MENU", 10, 25);
+		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
+	}
+	void drawInstructionCState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		
+		g.setFont(titleF);
+		g.setColor(Color.BLUE);
+		g.drawString("INSTUCTIONS", 160, 150);
+		
+		g.setFont(smallTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("Press ENTER for MENU", 10, 25);
+		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
+	}
+	void drawInstructionDState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		
+		g.setFont(titleF);
+		g.setColor(Color.BLUE);
+		g.drawString("INSTUCTIONS", 160, 150);
+		
+		g.setFont(smallTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("Press ENTER for MENU", 10, 25);
+		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
+	}
+	void drawInstructionEState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
+		
+		g.setFont(titleF);
+		g.setColor(Color.BLUE);
+		g.drawString("INSTUCTIONS", 160, 150);
+		
+		g.setFont(smallTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("Press ENTER for MENU", 10, 25);
+		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
 	
 	@Override
@@ -180,8 +269,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}else if(currentState == GAMEOVER){
 		    updateGameoverState();
-		} else if (currentState == INSTRUCTIONS) {
-			updateInstruState();
+		} else if (currentState == INSTRUCTIONSA) {
+			updateInstruAState();
 		} else if (currentState == CHOOSE) {
 			updateChooseState();
 		}
@@ -213,9 +302,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == GAMEOVER) {
 		        currentState = MENU;
-		        p = new Player(550, 600, 50, 50, 9);
+		        p = new Player(550, 600, size, size, speed, name);
 				wom = new WObjectManager(p);
-		    } else if (currentState == INSTRUCTIONS) {
+				ammo = 2;
+				if (fourPower) {
+					wom.points = 2;
+				}
+		    } else if (currentState == INSTRUCTIONSA || currentState == INSTRUCTIONSB || currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSE) {
 		    	currentState = MENU;
 		    } else if (currentState == CHOOSE) {
 		    	//same as f
@@ -236,25 +329,40 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
 			if (p.x > 0) {
-		    	p.left();
-		    }
+				p.left();
+			}
+			if (currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSE) {
+				currentState--;
+			} else if (currentState == INSTRUCTIONSA) {
+				currentState = INSTRUCTIONSE;
+			} else if (currentState == INSTRUCTIONSB) {
+				currentState = INSTRUCTIONSA;
+			}
 		}
 		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-		    	p.right();
+			p.right();
+			if (currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSB) {
+				currentState++;
+			} else if (currentState == INSTRUCTIONSA) {
+				currentState = INSTRUCTIONSB;
+			} else if (currentState == INSTRUCTIONSE) {
+				currentState = INSTRUCTIONSA;
+			}
 		}
 		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-		    	p.down();
+			p.down();
 		}
 		if (e.getKeyCode()==KeyEvent.VK_SPACE) {
 			if (currentState == MENU) {
-				currentState = INSTRUCTIONS;
+				currentState = INSTRUCTIONSA;
+			}
+			if (currentState == GAME && breakerPower && ammo > 0) {
+				wom.addProjectile(p.getProjectile());
+				ammo--;
 			}
 		}
-		
-		if ((currentState == GAMEOVER || currentState == MENU || currentState == INSTRUCTIONS || currentState == CHOOSE) && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
-			System.exit(0);
-		}
-		if (currentState==GAME && (e.getKeyCode()==81 || e.getKeyCode()==113)) {
+
+		if (e.getKeyCode()==81 || e.getKeyCode()==113) {
 			stopGame();
 			paused = true;
 			int quit = JOptionPane.showOptionDialog(null, "Are you sure you would like to QUIT?", "Pop-up Title", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Back to GAME", "QUIT"}, null);
@@ -273,21 +381,53 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			// F no power
 			if (e.getKeyCode()==70 || e.getKeyCode()==102) {
 				System.out.println("Chosen Default");
+				name = "blue player.png";
+				size = 50;
+				speed = 9;
+				p = new Player(550, 600, 50, 50, 9, name);
+				wom = new WObjectManager(p);
+				wom.points = 5;
+				powersFalse();
+				defaultPower = true;
 				currentState=MENU;
 			}
 			// A speedster
 			if (e.getKeyCode()==65 || e.getKeyCode()==97) {
 				System.out.println("Chosen Speedster");
+				name = "speedblueplayer.png";
+				size = 45;
+				speed = 14;
+				p = new Player(550, 600, 45, 45, 14, name);
+				wom = new WObjectManager(p);
+				wom.points = 5;
+				powersFalse();
+				speedPower = true;
 				currentState=MENU;
 			}
 			// S breaker
 			if (e.getKeyCode()==83 || e.getKeyCode()==115) {
 				System.out.println("Chosen Wall Breaker");
+				name = "breakerblueplayer.png";
+				size = 55;
+				speed = 7.3;
+				p = new Player(550, 600, 55, 55, 7.3, name);
+				wom = new WObjectManager(p);
+				wom.points = 5;
+				powersFalse();
+				breakerPower = true;
 				currentState=MENU;
 			}
 			// D 
 			if (e.getKeyCode()==68 || e.getKeyCode()==100) {
-				System.out.println("Chosen ");
+				System.out.println("Chosen 404 ERROR");
+				name = "404blueplayer.png";
+				size = 50;
+				speed = 11;
+				p = new Player(550, 600, 50, 50, 11, name);
+				wom = new WObjectManager(p);
+				wom.points = 2;
+				powersFalse();
+				fourPower = true;
 				currentState=MENU;
 			}
 		}
@@ -295,6 +435,36 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -327,5 +497,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	void stopGame() {
 		wallSpawn.stop();
+	}
+	
+	void powersFalse() {
+		defaultPower = false;
+		speedPower = false;
+		breakerPower = false;
+		fourPower = false;
 	}
 }

@@ -5,47 +5,32 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
-public class Player extends WGameObject{
+public class WProjectile extends WGameObject{
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;
 	
-	public Player(int x, int y, int width, int height, double speed, String name) {
+	public WProjectile(int x, int y, int width, int height, double speed, String name) {
 		super(x, y, width, height, speed, name);
+		speed = 10;
 		
-		needImage = true;
 		if (needImage) {
-		    loadImage (name);
-		    System.out.println(name);
+		    loadImage ("bullet.png");
 		}
+	}
+	
+	void update() {
+		y-=speed;
+		super.update();
 	}
 	
 	void draw(Graphics g) {
 		if (gotImage) {
 			g.drawImage(image, x, y, width, height, null);
 		} else {
-			g.setColor(Color.WHITE);
+			g.setColor(Color.RED);
 			g.fillRect(x, y, width, height);
 		}
-		g.setColor(Color.RED);
-		//g.drawRect(collisionBox.x, collisionBox.y, width, height);
-	}
-	
-	public void right() {
-        x+=speed;
-    }	
-	public void left() {
-        x-=speed;
-    }
-	public void up() {
-        y-=speed;
-    }
-	public void down() {
-        y+=speed;
-    }
-	
-	public WProjectile getProjectile() {
-		return new WProjectile(x + width/2, y, 10, 10, 10, null);
 	}
 	
 	void loadImage(String imageFile) {

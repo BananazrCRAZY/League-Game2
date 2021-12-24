@@ -11,85 +11,85 @@ import javax.swing.Timer;
 public class WObjectManager implements ActionListener{
 	Player play;
 	ArrayList<WallObject> walls = new ArrayList<WallObject>();
-	ArrayList<Pass> passes = new ArrayList<Pass>();
+	ArrayList<WProjectile> projectiles = new ArrayList<WProjectile>();
 	Random ran;
 	//changed for testing
-	int score = 280;
+	int score = 400;
+	int points = 5;
 	double numwall = -1;
 
 	WObjectManager(Player play) {
 		this.play = play;
 	}
 
-//	void addProjectile(Projectile pro) {
-//		projectiles.add(pro);
-//	}
+	void addProjectile(WProjectile pro) {
+		projectiles.add(pro);
+	}
 
 	void addWall() {
 		numwall++;
-		
-		if (score > 550 && score < 650 && numwall%5==0) {
+
+		if (score > 550 && score < 650 && numwall%4==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 70;
-			walls.add(new WallObject(0,0, dis,50, 3));
-			walls.add(new WallObject(start,0, 1100,50, 3));
-// Stage 7 460-540
-		} else if (score > 450 && score < 550 && numwall%6==0) {
+			walls.add(new WallObject(0,0, dis,25, 3, null));
+			walls.add(new WallObject(start,0, 1100,25, 3, null));
+			// Stage 7 460-540
+		} else if (score > 450 && score < 550 && numwall%4==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 75;
-			walls.add(new WallObject(0,0, dis,50, 2));
-			walls.add(new WallObject(start,0, 1100,50, 2));
-// Stage 6 360-440
-		} else if (score > 350 && score < 450 && numwall%7==0) {
+			walls.add(new WallObject(0,0, dis,25, 2, null));
+			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			// Stage 6 360-440
+		} else if (score > 350 && score < 450 && numwall%5==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 75;
-			walls.add(new WallObject(0,0, dis,50, 2));
-			walls.add(new WallObject(start,0, 1100,50, 2));
-// Stage 5 310-340
-		} else if (score > 300 && score < 350 && numwall%7==0) {
+			walls.add(new WallObject(0,0, dis,25, 2, null));
+			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			// Stage 5 310-350
+		} else if (score > 300 && score <= 350 && numwall%5==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50, 2));
-			walls.add(new WallObject(start,0, 1100,50, 2));
-// Stage 4 260-290
-		} else if (score > 250 && score < 300 && numwall%8==0) {
+			walls.add(new WallObject(0,0, dis,25, 2, null));
+			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			// Stage 4 260-300
+		} else if (score > 250 && score <= 300 && numwall%6==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50, 2));
-			walls.add(new WallObject(start,0, 1100,50, 2));
-// Stage 3 220-240
-		} else if (score > 210 && score < 250 && numwall%9==0) {
+			walls.add(new WallObject(0,0, dis,25, 2, null));
+			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			// Stage 3 220-250
+		} else if (score > 210 && score <= 250 && numwall%7==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50, 2));
-			walls.add(new WallObject(start,0, 1100,50, 2));
-// Stage 2 110-200
-		} else if (score > 100 && score < 210 && numwall%9==0) {
+			walls.add(new WallObject(0,0, dis,25, 2, null));
+			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			// Stage 2 110-200
+		} else if (score > 100 && score < 210 && numwall%8==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50, 1));
-			walls.add(new WallObject(start,0, 1100,50, 1));
-// Stage 1 0-90
-		} else if (score >= 0 && score < 100 && numwall%10==0) {
+			walls.add(new WallObject(0,0, dis,25, 1, null));
+			walls.add(new WallObject(start,0, 1100,25, 1, null));
+			// Stage 1 0-90
+		} else if (score >= 0 && score < 100 && numwall%9==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,50, 1));
-			walls.add(new WallObject(start,0, 1100,50, 1));
-			//passes.add(new Pass(ran.nextInt(Walls.WIDTH-1),0,70,55));
+			walls.add(new WallObject(0,0, dis,25, 1, null));
+			walls.add(new WallObject(start,0, 1100,25, 1, null));
 		}
 	}
 
 	void update() {
 		if (!play.isActive) {
-			
+
 		}
 		for (int i = 0; i < walls.size(); i++) {
 			WallObject a = walls.get(i);
@@ -101,26 +101,16 @@ public class WObjectManager implements ActionListener{
 				i--;
 			}
 		}
-		for (int i = 0; i < passes.size(); i++) {
-			Pass ps = passes.get(i);
-			if (ps.x >= Walls.WIDTH || ps.y >= Walls.HEIGHT) {
-				ps.isActive = false;
+		for (int i = 0; i < projectiles.size(); i++) {
+			WProjectile p = projectiles.get(i);
+			if (p.x >= 704 || p.x <= 5 || p.y <= -20) {
+				p.isActive = false;
 			}
-			ps.update();
-			if (PurgeObjects(passes, ps)) {
+			p.update();
+			if (PurgeObjects(projectiles, p)) {
 				i--;
 			}
 		}
-//		for (int i = 0; i < projectiles.size(); i++) {
-//			Projectile p = projectiles.get(i);
-//			if (p.x >= 704 || p.x <= 5 || p.y <= -20) {
-//				p.isActive = false;
-//			}
-//			p.update();
-//			if (PurgeObjects(projectiles, p)) {
-//				i--;
-//			}
-//		}
 		play.update();
 		checkCollision();
 	}
@@ -129,14 +119,10 @@ public class WObjectManager implements ActionListener{
 		for (WallObject a: walls) {
 			a.draw(g);
 		}
-		for (Pass p: passes) {
+
+		for (WProjectile p: projectiles) {
 			p.draw(g);
 		}
-
-
-//		for (Projectile p: projectiles) {
-//			p.draw(g);
-//		}
 
 		play.draw(g);
 	}
@@ -144,7 +130,7 @@ public class WObjectManager implements ActionListener{
 	boolean PurgeObjects(ArrayList list, WGameObject go) {
 		if (!go.isActive) {
 			list.remove(go);
-			score+=5;
+			score+=points;
 			return true;
 		}
 		return false;
@@ -154,40 +140,30 @@ public class WObjectManager implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		addWall();
+		if (points==2 && score==404) {
+			points = 4;
+		}
 	}
 
 	public void checkCollision() {
-		boolean noskip = true;
-		
-//		for(int k = 0; k < walls.size(); k++){
-//			Pass p = passes.get(k);
-//			if (play.collisionBox.intersects(p.collisionBox)) {
-//				play.isActive = true;
-//				noskip = false;
-//			}
-//		}
-		
-		if (noskip) {
-			for(int i = 0; i < walls.size(); i++){
-				WallObject a = walls.get(i);
-				if (play.collisionBox.intersects(a.collisionBox)) {
-					play.isActive = false;
+		for(int i = 0; i < walls.size(); i++){
+			WallObject a = walls.get(i);
+			if (play.collisionBox.intersects(a.collisionBox)) {
+				play.isActive = false;
+				a.isActive = false;
+				break;
+			}
+			for(int j = 0; j < projectiles.size(); j++){
+				WProjectile p = projectiles.get(j);
+				if (p.collisionBox.intersects(a.collisionBox)) {
+					p.isActive = false;
 					a.isActive = false;
-					break;
+					score++;
 				}
 			}
 		}
-			
-//			for(int j = 0; j < projectiles.size(); j++){
-//				Projectile p = projectiles.get(j);
-//				if (p.collisionBox.intersects(a.collisionBox)) {
-//					p.isActive = false;
-//					a.isActive = false;
-//					score++;
-//				}
-//			}
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
