@@ -27,8 +27,11 @@ public class Player extends WGameObject{
 			g.setColor(Color.WHITE);
 			g.fillRect(x, y, width, height);
 		}
-		g.setColor(Color.RED);
-		//g.drawRect(collisionBox.x, collisionBox.y, width, height);
+
+		if (GamePanel.highlight) {
+			g.setColor(Color.WHITE);
+			g.drawRect(collisionBox.x, collisionBox.y, width, height);
+		}
 	}
 	
 	public void right() {

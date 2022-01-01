@@ -151,9 +151,15 @@ public class WObjectManager implements ActionListener{
 		for(int i = 0; i < walls.size(); i++){
 			WallObject a = walls.get(i);
 			if (play.collisionBox.intersects(a.collisionBox)) {
-				play.isActive = false;
-				a.isActive = false;
-				break;
+				if (GamePanel.lives > 0) {
+					GamePanel.lives--;
+					a.isActive = false;
+					break;
+				} else {
+					play.isActive = false;
+					a.isActive = false;
+					break;
+				}
 			}
 			for(int j = 0; j < projectiles.size(); j++){
 				WProjectile p = projectiles.get(j);

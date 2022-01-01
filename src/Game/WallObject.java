@@ -29,6 +29,10 @@ public class WallObject extends WGameObject{
 			g.setColor(Color.BLUE);
 			g.fillRect(x, y, width, height);
 		}
+		if (GamePanel.highlight) {
+			g.setColor(Color.YELLOW);
+			g.drawRect(collisionBox.x, collisionBox.y, width, height);
+		}
 	}
 	
 	void loadImage(String imageFile) {

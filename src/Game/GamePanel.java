@@ -38,6 +38,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	Timer wallSpawn;
 	int timeint = -1;
 	WObjectManager wom;
+	public static boolean highlight =  false;
 	
 	Player p;
 	String name = "blue player.png";
@@ -50,6 +51,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	public boolean breakerPower = false;
 	public boolean fourPower = false;
 	int ammo = 2;
+	public static int lives = 0;
+	Random ran;	
 	
 	public static BufferedImage image;
 	public static boolean needImage = true;
@@ -61,6 +64,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		 p = new Player(550, 600, size, size, speed, name);
 		 wom = new WObjectManager(p);
 		 wallSpawn = new Timer(1000, wom);
+		 ran = new Random();
 		 
 		 if (needImage) {
 			 loadImage ("wallsback.jpg");
@@ -200,7 +204,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		drawImage("wallsfillerbackground.jpg", g, 150, 200, 274, 400);
 		g.drawString("SPEEDSTER 'A'", 187, 650);
 		drawImage("wallsfillerbackground.jpg", g, 463, 200, 274, 400);
-		g.drawString("WALL BREAKER 'S'", 483, 650);
+		g.drawString("BREAKER 'S'", 525, 650);
 		drawImage("wallsfillerbackground.jpg", g, 776, 200, 274, 400);
 		g.drawString(" 404 ERROR 'D'", 820, 650);
 	}
@@ -223,8 +227,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.drawString("Q", 750, 375);
 		g.drawString("Continue/Leave Game", 350, 425);
 		g.drawString("ENTER", 750, 425);
-		g.drawString("Shoot (Breaker Power)", 350, 475);
+		g.drawString("Power Ability", 350, 475);
 		g.drawString("SPACE", 750, 475);
+		g.drawString("Highlight Walls & Player", 350, 525);
+		g.drawString("Toggle H", 750, 525);
 		g.drawString("Press ENTER for MENU", 10, 25);
 		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
@@ -235,7 +241,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
-		drawImage("wallsfillerbackground.jpg", g, 150, 200, 274, 400);
+		drawImage("wallsfillerbackground.jpg", g, 250, 200, 274, 400);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("POWER: SPEEDSTER", 550, 230);
+		g.drawString("  - Smaller Size", 550, 300);
+		g.drawString("  - Increased Speed", 550, 370);
+		g.drawString("Ability- Warp:", 550, 470);
+		g.drawString("  - Warp Forward Even", 550, 540);
+		g.drawString("    Through Walls", 550, 610);
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
@@ -249,6 +264,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
+		drawImage("wallsfillerbackground.jpg", g, 250, 200, 274, 400);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("POWER: BREAKER", 550, 230);
+		g.drawString("  - Slower & Bigger Size", 550, 300);
+		g.drawString("  - 2 Lives", 550, 370);
+		g.drawString("Ability- Destroy:", 550, 470);
+		g.drawString("  - Shoots Wall Breaking", 550, 540);
+		g.drawString("    Bullet", 550, 610);
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
@@ -262,6 +287,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
+		drawImage("wallsfillerbackground.jpg", g, 250, 200, 274, 400);
+		
+		g.setFont(subTextF);
+		g.setColor(Color.WHITE);
+		g.drawString("POWER: 404 ERROR", 550, 230);
+		g.drawString("  - ?Speed Unknown?", 550, 300);
+		g.drawString("  - 2 Lives", 550, 370);
+		g.drawString("Ability- Point:", 550, 470);
+		g.drawString("  - Given 4 Points Per Wall", 550, 540);
+		g.drawString("    Until 404 Points Reached", 550, 610);
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
@@ -313,12 +348,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == GAMEOVER) {
 		        currentState = MENU;
-		        p = new Player(550, 600, size, size, speed, name);
-				wom = new WObjectManager(p);
 				ammo = 2;
 				if (fourPower) {
 					wom.points = 2;
+					ran = new Random();
+					speed = ran.nextInt(15-5)+5;
+					lives = 1;
+				} else if (breakerPower) {
+					lives = 1;
 				}
+				p = new Player(550, 600, size, size, speed, name);
+				wom = new WObjectManager(p);
 		    } else if (currentState == INSTRUCTIONSA || currentState == INSTRUCTIONSB || currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSE) {
 		    	currentState = MENU;
 		    } else if (currentState == CHOOSE) {
@@ -367,9 +407,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 			if (currentState == MENU) {
 				currentState = INSTRUCTIONSA;
 			}
-			if (currentState == GAME && breakerPower && ammo > 0) {
-				wom.addProjectile(p.getProjectile());
-				ammo--;
+			if (currentState == GAME) {
+				if (breakerPower && ammo > 0) {
+					wom.addProjectile(p.getProjectile());
+					ammo--;
+				}
+				if (speedPower && ammo > 0) {
+					p.y-=100;
+					ammo--;
+				}
+				if (fourPower && ammo > 0) {
+					
+				}
 			}
 		}
 
@@ -384,7 +433,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				wallSpawn.start();
 			}
 		}
-		if (currentState==MENU && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
+		if ((currentState==MENU || currentState == GAMEOVER) && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
 			currentState=CHOOSE;
 			System.out.println("CHOOSE A CHARACTER");
 		}
@@ -398,6 +447,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				p = new Player(550, 600, 50, 50, 9, name);
 				wom = new WObjectManager(p);
 				wom.points = 5;
+				lives = 0;
 				powersFalse();
 				defaultPower = true;
 				currentState=MENU;
@@ -411,6 +461,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				p = new Player(550, 600, 45, 45, 14, name);
 				wom = new WObjectManager(p);
 				wom.points = 5;
+				lives = 0;
 				powersFalse();
 				speedPower = true;
 				currentState=MENU;
@@ -424,24 +475,29 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				p = new Player(550, 600, 55, 55, 6.9, name);
 				wom = new WObjectManager(p);
 				wom.points = 5;
+				lives = 1;
 				powersFalse();
 				breakerPower = true;
 				currentState=MENU;
 			}
-			// D 
+			// D 404 error
 			if (e.getKeyCode()==68 || e.getKeyCode()==100) {
+				ran = new Random();
+				speed = ran.nextInt(15-7)+7;
 				System.out.println("Chosen 404 ERROR");
 				name = "404blueplayer.png";
 				size = 50;
-				speed = 11;
-				p = new Player(550, 600, 50, 50, 11, name);
+				p = new Player(550, 600, 50, 50, speed, name);
 				wom = new WObjectManager(p);
 				wom.points = 2;
+				lives = 1;
 				powersFalse();
 				fourPower = true;
 				currentState=MENU;
 			}
 		}
+		
+		if (e.getKeyCode()==72 || e.getKeyCode()==104) highlight = !highlight;
 	}
 
 	@Override
