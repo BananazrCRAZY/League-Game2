@@ -119,11 +119,9 @@ public class WObjectManager implements ActionListener{
 		for (WallObject a: walls) {
 			a.draw(g);
 		}
-
 		for (WProjectile p: projectiles) {
 			p.draw(g);
 		}
-
 		play.draw(g);
 	}
 

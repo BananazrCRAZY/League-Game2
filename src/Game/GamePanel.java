@@ -3,6 +3,7 @@ package Game;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,6 +32,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	
 	
 	int currentState = MENU;
+	Rectangle collisionBox;
 	Font titleF;
 	Font subTextF;
 	Font smallTextF;
@@ -190,6 +192,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
 	void drawChooseState(Graphics g) {
+		wom.draw(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Walls.WIDTH, Walls.HEIGHT);
 		
@@ -199,14 +202,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
-		g.drawString("No Power 'F'", 1000, 50);
+		g.drawString("No Power", 1050, 50);
 		
 		drawImage("wallsfillerbackground.jpg", g, 150, 200, 274, 400);
-		g.drawString("SPEEDSTER 'A'", 187, 650);
-		drawImage("wallsfillerbackground.jpg", g, 463, 200, 274, 400);
-		g.drawString("BREAKER 'S'", 525, 650);
-		drawImage("wallsfillerbackground.jpg", g, 776, 200, 274, 400);
-		g.drawString(" 404 ERROR 'D'", 820, 650);
+		g.drawString("SPEEDSTER", 210, 650);
+		drawImage("wallsback.jpg", g, 463, 200, 274, 400);
+		g.drawString("BREAKER", 540, 650);
+		drawImage("wallsback.jpg", g, 776, 200, 274, 400);
+		g.drawString(" 404 ERROR", 840, 650);
 	}
 	void drawInstructionBState(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -231,6 +234,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.drawString("SPACE", 750, 475);
 		g.drawString("Highlight Walls & Player", 350, 525);
 		g.drawString("Toggle H", 750, 525);
+		g.drawString("Select Power", 350, 575);
+		g.drawString("Click", 750, 575);
 		g.drawString("Press ENTER for MENU", 10, 25);
 		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
@@ -373,12 +378,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		        }
 		    }
 		}
-		if (e.getKeyCode()==KeyEvent.VK_UP) {
+		if (e.getKeyCode()==KeyEvent.VK_UP || e.getKeyCode() == 119) {
 		    if (p.y > 0) {
 		    	p.up();
 		    }
 		}
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+		if (e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode() == 97) {
 			if (p.x > 0) {
 				p.left();
 			}
@@ -390,7 +395,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				currentState = INSTRUCTIONSA;
 			}
 		}
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT || e.getKeyCode() == 100) {
 			p.right();
 			if (currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSB) {
 				currentState++;
@@ -400,7 +405,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				currentState = INSTRUCTIONSA;
 			}
 		}
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+		if (e.getKeyCode()==KeyEvent.VK_DOWN || e.getKeyCode() == 115) {
 			p.down();
 		}
 		if (e.getKeyCode()==KeyEvent.VK_SPACE) {
@@ -415,9 +420,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				if (speedPower && ammo > 0) {
 					p.y-=100;
 					ammo--;
-				}
-				if (fourPower && ammo > 0) {
-					
 				}
 			}
 		}
@@ -436,65 +438,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		if ((currentState==MENU || currentState == GAMEOVER) && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
 			currentState=CHOOSE;
 			System.out.println("CHOOSE A CHARACTER");
-		}
-		if (currentState==CHOOSE) {
-			// F no power
-			if (e.getKeyCode()==70 || e.getKeyCode()==102) {
-				System.out.println("Chosen Default");
-				name = "blue player.png";
-				size = 50;
-				speed = 9;
-				p = new Player(550, 600, 50, 50, 9, name);
-				wom = new WObjectManager(p);
-				wom.points = 5;
-				lives = 0;
-				powersFalse();
-				defaultPower = true;
-				currentState=MENU;
-			}
-			// A speedster
-			if (e.getKeyCode()==65 || e.getKeyCode()==97) {
-				System.out.println("Chosen Speedster");
-				name = "speedblueplayer.png";
-				size = 45;
-				speed = 14;
-				p = new Player(550, 600, 45, 45, 14, name);
-				wom = new WObjectManager(p);
-				wom.points = 5;
-				lives = 0;
-				powersFalse();
-				speedPower = true;
-				currentState=MENU;
-			}
-			// S breaker
-			if (e.getKeyCode()==83 || e.getKeyCode()==115) {
-				System.out.println("Chosen Wall Breaker");
-				name = "breakerblueplayer.png";
-				size = 55;
-				speed = 6.9;
-				p = new Player(550, 600, 55, 55, 6.9, name);
-				wom = new WObjectManager(p);
-				wom.points = 5;
-				lives = 1;
-				powersFalse();
-				breakerPower = true;
-				currentState=MENU;
-			}
-			// D 404 error
-			if (e.getKeyCode()==68 || e.getKeyCode()==100) {
-				ran = new Random();
-				speed = ran.nextInt(15-7)+7;
-				System.out.println("Chosen 404 ERROR");
-				name = "404blueplayer.png";
-				size = 50;
-				p = new Player(550, 600, 50, 50, speed, name);
-				wom = new WObjectManager(p);
-				wom.points = 2;
-				lives = 1;
-				powersFalse();
-				fourPower = true;
-				currentState=MENU;
-			}
 		}
 		
 		if (e.getKeyCode()==72 || e.getKeyCode()==104) highlight = !highlight;
@@ -515,7 +458,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		if (currentState == CHOOSE && e.getX() >= 150 && e.getX() <= 424 && e.getY() >= 200 && e.getY() <= 630) {
+			speedsterPowerC();
+		}
+		if (currentState == CHOOSE && e.getX() >= 463 && e.getX() <= 737 && e.getY() >= 200 && e.getY() <= 630) {
+			breakerPowerC();
+		}
+		if (currentState == CHOOSE && e.getX() >= 776 && e.getX() <= 1050 && e.getY() >= 200 && e.getY() <= 630) {
+			fourPowerC();
+		}
+		if (currentState == CHOOSE && e.getX() >= 1040 && e.getX() <= 1180 && e.getY() >= 40 && e.getY() <= 100) {
+			defaultPowerC();
+		}
 	}
 
 	@Override
@@ -527,13 +481,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	void drawImage(String file, Graphics g, int x, int y, int w, int h) {
@@ -571,5 +523,59 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		speedPower = false;
 		breakerPower = false;
 		fourPower = false;
+	}
+	
+	void defaultPowerC() {
+		System.out.println("Chosen Default");
+		name = "blue player.png";
+		size = 50;
+		speed = 9;
+		p = new Player(550, 600, 50, 50, 9, name);
+		wom = new WObjectManager(p);
+		wom.points = 5;
+		lives = 0;
+		powersFalse();
+		defaultPower = true;
+		currentState=MENU;
+	}
+	void speedsterPowerC() {
+		System.out.println("Chosen Speedster");
+		name = "speedblueplayer.png";
+		size = 45;
+		speed = 14;
+		p = new Player(550, 600, 45, 45, 14, name);
+		wom = new WObjectManager(p);
+		wom.points = 5;
+		lives = 0;
+		powersFalse();
+		speedPower = true;
+		currentState=MENU;
+	}
+	void breakerPowerC() {
+		System.out.println("Chosen Wall Breaker");
+		name = "breakerblueplayer.png";
+		size = 55;
+		speed = 6.9;
+		p = new Player(550, 600, 55, 55, 6.9, name);
+		wom = new WObjectManager(p);
+		wom.points = 5;
+		lives = 1;
+		powersFalse();
+		breakerPower = true;
+		currentState=MENU;
+	}
+	void fourPowerC() {
+		ran = new Random();
+		speed = ran.nextInt(15-7)+7;
+		System.out.println("Chosen 404 ERROR");
+		name = "404blueplayer.png";
+		size = 50;
+		p = new Player(550, 600, 50, 50, speed, name);
+		wom = new WObjectManager(p);
+		wom.points = 2;
+		lives = 1;
+		powersFalse();
+		fourPower = true;
+		currentState=MENU;
 	}
 }

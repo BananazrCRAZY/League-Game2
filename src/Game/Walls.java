@@ -17,6 +17,7 @@ public class Walls {
 		gp = new GamePanel();
 		setup(WIDTH, HEIGHT);
 		f.addKeyListener(gp);
+		f.addMouseListener(gp);
 	}
 	
 	public void setup(int wid, int hei) {
