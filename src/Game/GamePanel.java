@@ -150,6 +150,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		
 		g.setFont(smallTextF);
 		g.drawString("Press SPACE for INSTRUCTIONS", 420, 600);
+		g.drawString("Quit", 50, 50);
+		g.drawString("Power Selection", 50, 650);
 	}
 	void drawGameState(Graphics g) {
 		drawImage("wallsback.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
@@ -204,7 +206,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setColor(Color.WHITE);
 		g.drawString("No Power", 1050, 50);
 		
-		drawImage("wallsfillerbackground.jpg", g, 150, 200, 274, 400);
+		drawImage("wallsback.jpg", g, 150, 200, 274, 400);
 		g.drawString("SPEEDSTER", 210, 650);
 		drawImage("wallsback.jpg", g, 463, 200, 274, 400);
 		g.drawString("BREAKER", 540, 650);
@@ -225,7 +227,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		
 		g.setFont(smallTextF);
 		g.drawString("Move", 350, 325);
-		g.drawString("Arrow Keys", 750, 325);
+		g.drawString("WASD/Arrow Keys", 750, 325);
 		g.drawString("Close Game/Pause", 350, 375);
 		g.drawString("Q", 750, 375);
 		g.drawString("Continue/Leave Game", 350, 425);
@@ -234,7 +236,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.drawString("SPACE", 750, 475);
 		g.drawString("Highlight Walls & Player", 350, 525);
 		g.drawString("Toggle H", 750, 525);
-		g.drawString("Select Power", 350, 575);
+		g.drawString("Select", 350, 575);
 		g.drawString("Click", 750, 575);
 		g.drawString("Press ENTER for MENU", 10, 25);
 		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
@@ -355,12 +357,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		        currentState = MENU;
 				ammo = 2;
 				if (fourPower) {
-					wom.points = 2;
-					ran = new Random();
-					speed = ran.nextInt(15-5)+5;
-					lives = 1;
+					fourPowerC();
 				} else if (breakerPower) {
-					lives = 1;
+					breakerPowerC();
+				} else if (speedPower) {
+					speedsterPowerC();
+				} else if (defaultPower) {
+					defaultPowerC();
 				}
 				p = new Player(550, 600, size, size, speed, name);
 				wom = new WObjectManager(p);
@@ -378,12 +381,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		        }
 		    }
 		}
-		if (e.getKeyCode()==KeyEvent.VK_UP || e.getKeyCode() == 119) {
+		
+		if (e.getKeyCode()==KeyEvent.VK_UP || e.getKeyCode() == 119 || e.getKeyCode() == 87) {
 		    if (p.y > 0) {
 		    	p.up();
 		    }
 		}
-		if (e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode() == 97) {
+		if (e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode() == 97 || e.getKeyCode() == 65) {
 			if (p.x > 0) {
 				p.left();
 			}
@@ -395,7 +399,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				currentState = INSTRUCTIONSA;
 			}
 		}
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT || e.getKeyCode() == 100) {
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT || e.getKeyCode() == 100 || e.getKeyCode() == 68) {
 			p.right();
 			if (currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSB) {
 				currentState++;
@@ -405,7 +409,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				currentState = INSTRUCTIONSA;
 			}
 		}
-		if (e.getKeyCode()==KeyEvent.VK_DOWN || e.getKeyCode() == 115) {
+		if (e.getKeyCode()==KeyEvent.VK_DOWN || e.getKeyCode() == 115 || e.getKeyCode() == 83) {
 			p.down();
 		}
 		if (e.getKeyCode()==KeyEvent.VK_SPACE) {
@@ -423,18 +427,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 				}
 			}
 		}
-
-		if (e.getKeyCode()==81 || e.getKeyCode()==113) {
-			stopGame();
-			paused = true;
-			int quit = JOptionPane.showOptionDialog(null, "Are you sure you would like to QUIT?", "Pop-up Title", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Back to GAME", "QUIT"}, null);
-			if (quit == 1) {
-				System.exit(0);
-			} else {
-				paused = false;
-				wallSpawn.start();
-			}
-		}
+		// q quit
+		if (e.getKeyCode()==81 || e.getKeyCode()==113) quit();
+		// c choose
 		if ((currentState==MENU || currentState == GAMEOVER) && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
 			currentState=CHOOSE;
 			System.out.println("CHOOSE A CHARACTER");
@@ -458,17 +453,79 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if (currentState == CHOOSE && e.getX() >= 150 && e.getX() <= 424 && e.getY() >= 200 && e.getY() <= 630) {
-			speedsterPowerC();
+		System.out.println("x:" + e.getX());
+		System.out.println("y:" + e.getY());
+		if (currentState == MENU) {
+			if (e.getX() >= 30) {
+				if (e.getX() <= 150 && e.getY() >= 40 && e.getY() <= 105) { 
+					quit();
+				} else if (e.getX() <= 300 && e.getY() >= 640 && e.getY() <= 700) {
+					currentState = CHOOSE;
+				}
+			}
+			if (e.getX() >= 350 && e.getX() <= 890 && e.getY() >= 480 && e.getY() <= 535) {
+				currentState = GAME;
+				startGame();
+			}
+			if (e.getX() >= 400 && e.getX() <= 815 && e.getY() >= 590 && e.getY() <= 645) {
+				currentState = INSTRUCTIONSA;
+			}
 		}
-		if (currentState == CHOOSE && e.getX() >= 463 && e.getX() <= 737 && e.getY() >= 200 && e.getY() <= 630) {
-			breakerPowerC();
+		if (currentState == 3 || currentState == 5 || currentState == 6 || currentState == 7 || currentState == 8) {
+			if (e.getX() >= 10 && e.getX() <= 300 && e.getY() >= 0 && e.getY() <= 60) {
+				currentState = MENU;
+			}
+			if (e.getX() >= 430 && e.getX() <= 470 && e.getY() >= 690 && e.getY() <= 705) {
+				if (currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSE) {
+					currentState--;
+				} else if (currentState == INSTRUCTIONSA) {
+					currentState = INSTRUCTIONSE;
+				} else if (currentState == INSTRUCTIONSB) {
+					currentState = INSTRUCTIONSA;
+				}
+			} else if (e.getX() >= 740 && e.getX() <= 780 && e.getY() >= 675 && e.getY() <= 705) {
+				if (currentState == INSTRUCTIONSC || currentState == INSTRUCTIONSD || currentState == INSTRUCTIONSB) {
+					currentState++;
+				} else if (currentState == INSTRUCTIONSA) {
+					currentState = INSTRUCTIONSB;
+				} else if (currentState == INSTRUCTIONSE) {
+					currentState = INSTRUCTIONSA;
+				}
+			}
 		}
-		if (currentState == CHOOSE && e.getX() >= 776 && e.getX() <= 1050 && e.getY() >= 200 && e.getY() <= 630) {
-			fourPowerC();
+		if (currentState == CHOOSE) {
+			if (e.getX() >= 150 && e.getX() <= 424 && e.getY() >= 200 && e.getY() <= 670) {
+				speedsterPowerC();
+			}
+			if (e.getX() >= 463 && e.getX() <= 737 && e.getY() >= 200 && e.getY() <= 670) {
+				breakerPowerC();
+			}
+			if (e.getX() >= 776 && e.getX() <= 1050 && e.getY() >= 200 && e.getY() <= 670) {
+				fourPowerC();
+			}
+			if (e.getX() >= 1040 && e.getX() <= 1180 && e.getY() >= 40 && e.getY() <= 100) {
+				defaultPowerC();
+			}
 		}
-		if (currentState == CHOOSE && e.getX() >= 1040 && e.getX() <= 1180 && e.getY() >= 40 && e.getY() <= 100) {
-			defaultPowerC();
+		if (currentState == GAMEOVER) {
+			if (e.getX() >= 250 && e.getX() <= 530 && e.getY() >= 600 && e.getY() <= 640) {
+				currentState = MENU;
+				ammo = 2;
+				if (fourPower) {
+					fourPowerC();
+				} else if (breakerPower) {
+					breakerPowerC();
+				} else if (speedPower) {
+					speedsterPowerC();
+				} else if (defaultPower) {
+					defaultPowerC();
+				}
+				p = new Player(550, 600, size, size, speed, name);
+				wom = new WObjectManager(p);
+			}
+			if (e.getX() >= 800 && e.getX() <= 1000 && e.getY() >= 600 && e.getY() <= 640) {
+				quit();
+			}
 		}
 	}
 
@@ -526,7 +583,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	}
 	
 	void defaultPowerC() {
-		System.out.println("Chosen Default");
 		name = "blue player.png";
 		size = 50;
 		speed = 9;
@@ -539,7 +595,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		currentState=MENU;
 	}
 	void speedsterPowerC() {
-		System.out.println("Chosen Speedster");
 		name = "speedblueplayer.png";
 		size = 45;
 		speed = 14;
@@ -552,8 +607,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		currentState=MENU;
 	}
 	void breakerPowerC() {
-		System.out.println("Chosen Wall Breaker");
-		name = "breakerblueplayer.png";
+		name = "breakerplayer.png";
 		size = 55;
 		speed = 6.9;
 		p = new Player(550, 600, 55, 55, 6.9, name);
@@ -567,8 +621,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	void fourPowerC() {
 		ran = new Random();
 		speed = ran.nextInt(15-7)+7;
-		System.out.println("Chosen 404 ERROR");
-		name = "404blueplayer.png";
+		name = "fourofourplayer.png";
 		size = 50;
 		p = new Player(550, 600, 50, 50, speed, name);
 		wom = new WObjectManager(p);
@@ -577,5 +630,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		powersFalse();
 		fourPower = true;
 		currentState=MENU;
+	}
+	
+	void quit() {
+		stopGame();
+		paused = true;
+		int quit = JOptionPane.showOptionDialog(null, "Are you sure you would like to QUIT?", "Pop-up Title", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Back to GAME", "QUIT"}, null);
+		if (quit == 1) {
+			System.exit(0);
+		} else {
+			paused = false;
+			wallSpawn.start();
+		}
 	}
 }
