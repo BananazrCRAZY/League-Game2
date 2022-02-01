@@ -68,9 +68,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		 wallSpawn = new Timer(1000, wom);
 		 ran = new Random();
 		 
-		 if (needImage) {
-			 loadImage ("wallsback.jpg");
-		}
+//		 if (needImage) {
+//			 loadImage ("wallsback.jpg");
+//			 loadImage ("speedwallsbanner.png");
+//			 
+//		}
 		 
 		 frameDraw = new Timer(1000/60,this);
 		 frameDraw.start();
@@ -150,8 +152,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		
 		g.setFont(smallTextF);
 		g.drawString("Press SPACE for INSTRUCTIONS", 420, 600);
-		g.drawString("Quit", 50, 50);
-		g.drawString("Power Selection", 50, 650);
+		g.setColor(Color.RED);
+		g.drawString("Quit 'Q'", 50, 50);
+		g.setColor(Color.YELLOW);
+		g.drawString("Power Selection 'P'", 50, 650);
 	}
 	void drawGameState(Graphics g) {
 		drawImage("wallsback.jpg", g, 0, 0, Walls.WIDTH, Walls.HEIGHT);
@@ -204,14 +208,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		
 		g.setFont(smallTextF);
 		g.setColor(Color.WHITE);
-		g.drawString("No Power", 1050, 50);
+		g.drawString("No Power '1'", 1050, 50);
 		
-		drawImage("wallsback.jpg", g, 150, 200, 274, 400);
+		drawImage("speedwallsbanner.png", g, 150, 200, 274, 400);
 		g.drawString("SPEEDSTER", 210, 650);
-		drawImage("wallsback.jpg", g, 463, 200, 274, 400);
+		drawImage("breakerwallsbanner.png", g, 463, 200, 274, 400);
 		g.drawString("BREAKER", 540, 650);
-		drawImage("wallsback.jpg", g, 776, 200, 274, 400);
+		drawImage("fourwallsbanner.png", g, 776, 200, 274, 400);
 		g.drawString(" 404 ERROR", 840, 650);
+		g.setColor(Color.YELLOW);
+		g.drawString("CLICK to select a POWER", 50, 50);
 	}
 	void drawInstructionBState(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -248,7 +254,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
-		drawImage("wallsfillerbackground.jpg", g, 250, 200, 274, 400);
+		drawImage("speedwallsbanner.png", g, 250, 200, 274, 400);
 		
 		g.setFont(subTextF);
 		g.setColor(Color.WHITE);
@@ -271,7 +277,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
-		drawImage("wallsfillerbackground.jpg", g, 250, 200, 274, 400);
+		drawImage("breakerwallsbanner.png", g, 250, 200, 274, 400);
 		
 		g.setFont(subTextF);
 		g.setColor(Color.WHITE);
@@ -294,7 +300,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.setFont(titleF);
 		g.setColor(Color.BLUE);
 		g.drawString("INSTUCTIONS", 160, 150);
-		drawImage("wallsfillerbackground.jpg", g, 250, 200, 274, 400);
+		drawImage("fourwallsbanner.png", g, 250, 200, 274, 400);
 		
 		g.setFont(subTextF);
 		g.setColor(Color.WHITE);
@@ -430,12 +436,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		// q quit
 		if (e.getKeyCode()==81 || e.getKeyCode()==113) quit();
 		// c choose
-		if ((currentState==MENU || currentState == GAMEOVER) && (e.getKeyCode()==99 || e.getKeyCode()==67)) {
+		if ((currentState==MENU || currentState == GAMEOVER) && (e.getKeyCode()==80 || e.getKeyCode()==112)) {
 			currentState=CHOOSE;
-			System.out.println("CHOOSE A CHARACTER");
+			
 		}
 		
 		if (e.getKeyCode()==72 || e.getKeyCode()==104) highlight = !highlight;
+		if (currentState == CHOOSE && e.getKeyCode() == 49) {
+			defaultPowerC();
+		}
+		
 	}
 
 	@Override
@@ -453,13 +463,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("x:" + e.getX());
-		System.out.println("y:" + e.getY());
+//		System.out.println("x:" + e.getX());
+//		System.out.println("y:" + e.getY());
 		if (currentState == MENU) {
 			if (e.getX() >= 30) {
 				if (e.getX() <= 150 && e.getY() >= 40 && e.getY() <= 105) { 
 					quit();
-				} else if (e.getX() <= 300 && e.getY() >= 640 && e.getY() <= 700) {
+				} else if (e.getX() <= 300 && e.getY() >= 620 && e.getY() <= 700) {
 					currentState = CHOOSE;
 				}
 			}
@@ -549,6 +559,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		loadImage(file);
 		if (gotImage) {
 			g.drawImage(image, x, y, w, h, null);
+			gotImage = false;
+			needImage = true;
 		} else {
 			g.setColor(Color.BLUE);
 			g.fillRect(x, y, w, h);

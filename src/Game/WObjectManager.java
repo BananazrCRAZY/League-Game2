@@ -14,7 +14,7 @@ public class WObjectManager implements ActionListener{
 	ArrayList<WProjectile> projectiles = new ArrayList<WProjectile>();
 	Random ran;
 	//changed for testing
-	int score = 400;
+	int score = 0;
 	int points = 5;
 	double numwall = -1;
 
@@ -28,62 +28,63 @@ public class WObjectManager implements ActionListener{
 
 	void addWall() {
 		numwall++;
-
-		if (score > 550 && score < 650 && numwall%4==0) {
+		Random ran = new Random();
+		int ranint = ran.nextInt(7-4)+4;
+		if (score > 550 && numwall%3==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 70;
-			walls.add(new WallObject(0,0, dis,25, 3, null));
-			walls.add(new WallObject(start,0, 1100,25, 3, null));
+			walls.add(new WallObject(0,0, dis,25, ranint, null));
+			walls.add(new WallObject(start,0, 1100,25, ranint, null));
 			// Stage 7 460-540
 		} else if (score > 450 && score < 550 && numwall%4==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 75;
-			walls.add(new WallObject(0,0, dis,25, 2, null));
-			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			walls.add(new WallObject(0,0, dis,25, 4, null));
+			walls.add(new WallObject(start,0, 1100,25, 4, null));
 			// Stage 6 360-440
 		} else if (score > 350 && score < 450 && numwall%5==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 75;
-			walls.add(new WallObject(0,0, dis,25, 2, null));
-			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			walls.add(new WallObject(0,0, dis,25, 4, null));
+			walls.add(new WallObject(start,0, 1100,25, 4, null));
 			// Stage 5 310-350
-		} else if (score > 300 && score <= 350 && numwall%5==0) {
+		} else if (score > 300 && score < 350 && numwall%5==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,25, 2, null));
-			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			walls.add(new WallObject(0,0, dis,25, 3, null));
+			walls.add(new WallObject(start,0, 1100,25, 3, null));
 			// Stage 4 260-300
-		} else if (score > 250 && score <= 300 && numwall%6==0) {
+		} else if (score > 250 && score < 300 && numwall%6==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,25, 2, null));
-			walls.add(new WallObject(start,0, 1100,25, 2, null));
+			walls.add(new WallObject(0,0, dis,25, 3, null));
+			walls.add(new WallObject(start,0, 1100,25, 3, null));
 			// Stage 3 220-250
-		} else if (score > 210 && score <= 250 && numwall%7==0) {
+		} else if (score > 120 && score <= 250 && numwall%7==0) {
+			ran = new Random();
+			int dis = ran.nextInt(Walls.WIDTH-100);
+			int start = dis + 100;
+			walls.add(new WallObject(0,0, dis,25, 3, null));
+			walls.add(new WallObject(start,0, 1100,25, 3, null));
+			// Stage 2 110-200
+		} else if (score > 50 && score < 120 && numwall%7==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
 			walls.add(new WallObject(0,0, dis,25, 2, null));
 			walls.add(new WallObject(start,0, 1100,25, 2, null));
-			// Stage 2 110-200
-		} else if (score > 100 && score < 210 && numwall%8==0) {
-			ran = new Random();
-			int dis = ran.nextInt(Walls.WIDTH-100);
-			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,25, 1, null));
-			walls.add(new WallObject(start,0, 1100,25, 1, null));
 			// Stage 1 0-90
-		} else if (score >= 0 && score < 100 && numwall%9==0) {
+		} else if (score >= 0 && score < 50 && numwall%8==0) {
 			ran = new Random();
 			int dis = ran.nextInt(Walls.WIDTH-100);
 			int start = dis + 100;
-			walls.add(new WallObject(0,0, dis,25, 1, null));
-			walls.add(new WallObject(start,0, 1100,25, 1, null));
+			walls.add(new WallObject(0,0, dis,25, 2, null));
+			walls.add(new WallObject(start,0, 1100,25, 2, null));
 		}
 	}
 
