@@ -240,10 +240,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 		g.drawString("ENTER", 750, 425);
 		g.drawString("Power Ability", 350, 475);
 		g.drawString("SPACE", 750, 475);
-		g.drawString("Highlight Walls & Player", 350, 525);
+		g.drawString("Show Hitboxes/Highlight", 350, 525);
 		g.drawString("Toggle H", 750, 525);
 		g.drawString("Select", 350, 575);
-		g.drawString("Click", 750, 575);
+		g.drawString("Left Click", 750, 575);
 		g.drawString("Press ENTER for MENU", 10, 25);
 		g.drawString("<- ARROW KEYS For NEXT->", 430, 670);
 	}
